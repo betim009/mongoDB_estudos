@@ -8,25 +8,27 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // Conectar ao MongoDB
-mongoose.connect('mongodb://localhost:27017/logs')
+mongoose.connect('mongodb://localhost:27017/my_db')
     .then(() => console.log('Conectado ao MongoDB'))
     .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
 
-// Definir o esquema e o modelo para a collection "logs"
-const logSchema = new mongoose.Schema({
-    id: Number,
-    // Adicione outros campos conforme necessário
+// Definição do esquema
+const usuarioSchema = new mongoose.Schema({
+    nome: String,
+    email: String,
+    idade: Number
 });
 
-const Log = mongoose.model('Log', logSchema, 'logs'); // O terceiro argumento especifica o nome da collection
+// Criando o modelo
+const Usuario = mongoose.model("Usuario", usuarioSchema, "usuarios");
 
 // Rota para buscar todos os logs
-app.get('/logs', async (req, res) => {
+app.get('/usuarios', async (req, res) => {
     try {
-        const logs = await Log.find({});
-        res.status(200).json(logs);
+        const results = await Usuario.find({});
+        res.status(200).json(results);
     } catch (err) {
-        res.status(500).send('Erro ao buscar logs: ' + err.message);
+        res.status(500).send('Erro ao buscar: ' + err.message);
     }
 });
 
